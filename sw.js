@@ -65,3 +65,81 @@ self.addEventListener('fetch', event => {
         })
     );
 });
+//Push Notification
+self.addEventListener('push', function(event) {
+    console.log('[Service Worker] Push Received.');
+
+    let notificationData = {};
+    
+    if (event.data) {
+        try {
+            notificationData = event.data.json();
+        } catch (e) {
+            notificationData = {
+                title: 'Fuji Kitchen',
+                body: event.data.text() || 'Bạn có thông báo mới!'
+            };
+        }
+    }
+
+    const options = {
+        body: notificationData.body || 'Thông báo từ Fuji Kitchen',
+        icon: notificationData.icon || '/icon-192x192.png',
+        badge: '/icon-72x72.png',
+        vibrate: notificationData.vibrate || [100, 50, 100],
+        data: notificationData.data || {},
+        actions: notificationData.actions || [],
+        requireInteraction: notificationData.requireInteraction || false,
+        tag: notificationData.tag || 'fuji-kitchen',
+        renotify: true
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(notificationData.title || 'Fuji Kitchen', options)
+    );
+});
+
+self.addEventListener('notificationclick', function(event) {
+    console.log('[Service Worker] Notification click Received.');
+    
+    event.notification.close();
+
+    const action = event.action;
+    const data = event.notification.data;
+
+    let urlToOpen = '/'; // Default URL
+
+    // Xử lý các action khác nhau
+    switch (action) {
+        case 'view':
+            urlToOpen = '/';
+            break;
+        case 'view-combo':
+            urlToOpen = '/?tab=combo';
+            break;
+        default:
+            if (data && data.orderStatus) {
+                urlToOpen = '/?tab=orders';
+            }
+            break;
+    }
+
+    event.waitUntil(
+        clients.matchAll({
+            type: 'window',
+            includeUncontrolled: true
+        }).then(function(clientList) {
+            // Tìm tab đã mở
+            for (let i = 0; i < clientList.length; i++) {
+                const client = clientList[i];
+                if (client.url.includes(self.location.origin) && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            // Mở tab mới nếu không tìm thấy
+            if (clients.openWindow) {
+                return clients.openWindow(urlToOpen);
+            }
+        })
+    );
+});
