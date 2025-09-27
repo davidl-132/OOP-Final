@@ -173,7 +173,7 @@ combo1.addFood(menuList.find(item => item.nameVi === "Gyoza - Bánh Potsticker")
 staffCombos.push(combo1);
 
 // Combo 2: Rice Don + Drink
-const combo2 = new Combo("丼セット", "Combo Cơm Thịt", 0.12);
+const combo2 = new Combo("丼セット", "Combo Cơm Thịt", 0.15);
 combo2.addFood(menuList.find(item => item.nameVi === "Gyudon - Cơm Thịt Bò"));
 combo2.addFood(menuList.find(item => item.nameVi === "Trà Xanh Nhật"));
 combo2.addFood(menuList.find(item => item.nameVi === "Edamame - Đậu Nành"));
@@ -308,10 +308,11 @@ const guestCart = new GuestCart();
 // APPLICATION LOGIC - Main App
 // =============================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    
+document.addEventListener('DOMContentLoaded', async () => { //Thêm (async trước () của T.Anh)
     // Sakura animation for black/white theme
     const container = document.querySelector('.sakura-container');
+    //Notification Manager của T.Anh (mỗi dòng 314)
+    const notificationManager = new NotificationManager();
     if (container) {
         const numPetals = 30;
 
@@ -559,18 +560,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Notification Handler ---
+    // --- Notification Handler --- 
+    const notificationInitialized = await notificationManager.initialize(); //cập nhật lại của T.Anh tới dòng 574
     const notificationBtn = document.getElementById('notification-btn');
     if (notificationBtn) {
         notificationBtn.addEventListener('click', () => {
-            alert('Không có thông báo mới / 新しい通知はありません');
+            if (notificationInitialized) {
+                showNotificationCenter();
+            } else {
+                alert('Push notification chưa được kích hoạt hoặc không được hỗ trợ.');
+            }
         });
     }
-
     // --- Payment Handler ---
-    const paymentBtn = document.getElementById('payment-btn');
+    const paymentBtn = document.getElementById('payment-btn'); //câp nhật Payment handler của T.Anh tới dòng 621
     if (paymentBtn) {
-        paymentBtn.addEventListener('click', () => {
+        paymentBtn.addEventListener('click', async () => {
             if (guestCart.getTotalItems() === 0) {
                 alert('Giỏ hàng trống! Vui lòng thêm món trước khi thanh toán.');
                 return;
@@ -588,10 +593,24 @@ Bạn có muốn tiếp tục thanh toán không?
             `.trim());
 
             if (confirmPayment) {
-                alert('Cảm ơn bạn! Đơn hàng đã được ghi nhận. Nhân viên sẽ chuẩn bị món cho bạn.');
+                // Thông báo xác nhận đơn hàng
+                notificationManager.notifyOrderUpdate('confirmed', {
+                    totalItems,
+                    totalPrice
+                });
+
+                // Mô phỏng quy trình nấu ăn với thông báo
+                setTimeout(() => {
+                    notificationManager.notifyOrderUpdate('preparing');
+                }, 5000);
+
+                setTimeout(() => {
+                    notificationManager.notifyOrderUpdate('ready');
+                }, 5000 + 15000);
+
+                alert('Cảm ơn bạn! Đơn hàng đã được ghi nhận. Bạn sẽ nhận được thông báo khi món ăn sẵn sàng.');
                 guestCart.clear();
                 updateCartDisplay();
-                
                 // Close cart modal
                 if (cartModal) {
                     cartModal.classList.add('hidden');
@@ -922,7 +941,10 @@ Bạn có muốn tiếp tục thanh toán không?
         // Tạo Combo mới (tên tiếng Nhật tạm để giống tên tiếng Việt)
         const newCombo = new Combo(name, name, discount, imageUrl || null);
         newItemsForCombo.forEach(item => newCombo.addFood(item));
-        
+        if (newCombo) { //Thông báo combo của T.Anh tới dòng 954
+            // Thông báo combo mới cho tất cả khách hàng
+            notificationManager.notifyNewCombo(newCombo.comboNameVi, newCombo.discount);
+        }
         // Thêm vào trình quản lý
         menuManager.addCombo(newCombo);
         
@@ -930,6 +952,106 @@ Bạn có muốn tiếp tục thanh toán không?
         document.getElementById('add-combo-modal').remove();
         renderMenu('combo'); // Cập nhật lại menu
     }
+    // =============================================================================
+// NOTIFICATION CENTER - THÊM FUNCTION MỚI
+// =============================================================================
+
+function showNotificationCenter() { //notification center của T.Anh tới dòng 1054
+    // Kiểm tra xem modal đã tồn tại chưa
+    if (document.getElementById('notification-center')) return;
+
+    const notificationCenterHtml = `
+        <div id="notification-center" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+            <div class="bg-gray-dark border-2 border-white rounded-2xl p-6 max-w-md w-full mx-4">
+                <h3 class="text-2xl font-bold text-white mb-6">🔔 Thông báo</h3>
+                
+                <div class="space-y-4 mb-6">
+                    <div class="p-4 bg-black rounded-lg border border-gray-medium">
+                        <h4 class="font-semibold text-white mb-2">Push Notifications</h4>
+                        <p class="text-sm text-gray-300 mb-3">Nhận thông báo về trạng thái đơn hàng và khuyến mãi</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm ${notificationManager.permission === 'granted' ? 'text-green-400' : 'text-gray-400'}">
+                                ${getNotificationStatusText()}
+                            </span>
+                            ${notificationManager.permission !== 'granted' ? 
+                                '<button onclick="requestNotificationPermission()" class="bg-white text-black px-3 py-1 text-sm rounded">Kích hoạt</button>' :
+                                '<span class="text-green-400">✓</span>'
+                            }
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-black rounded-lg border border-gray-medium">
+                        <h4 class="font-semibold text-white mb-2">Hiển thị thông báo</h4>
+                        <div class="space-y-2">
+                            <button onclick="demoOrderNotification()" class="w-full bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700">
+                                Thông báo đơn hàng
+                            </button>
+                            ${userRole === 'staff' ? `
+                                <button onclick="demoPromotionNotification()" class="w-full bg-yellow-600 text-black py-2 rounded text-sm hover:bg-yellow-700">
+                                    Thông báo khuyến mãi (Staff)
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="closeNotificationCenter()" class="w-full bg-gray-500 text-white py-2 rounded">Đóng</button>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', notificationCenterHtml);
+}
+
+function getNotificationStatusText() {
+    switch (notificationManager.permission) {
+        case 'granted':
+            return 'Đã kích hoạt';
+        case 'denied':
+            return 'Bị từ chối';
+        default:
+            return 'Chưa kích hoạt';
+    }
+}
+
+async function requestNotificationPermission() {
+    const initialized = await notificationManager.initialize();
+    
+    // Cập nhật giao diện
+    const modal = document.getElementById('notification-center');
+    if (modal && initialized) {
+        modal.remove();
+        showNotificationCenter(); // Hiển thị lại với trạng thái mới
+    }
+}
+
+function demoOrderNotification() {
+    notificationManager.notifyOrderUpdate('ready', {
+        totalItems: 3,
+        totalPrice: 185000
+    });
+}
+
+function demoPromotionNotification() {
+    notificationManager.notifyPromotion(
+        'Khuyến mãi cuối tuần!', 
+        'Giảm 15% cho tất cả combo từ thứ 7 đến chủ nhật',
+        'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop'
+    );
+}
+
+function closeNotificationCenter() {
+    const modal = document.getElementById('notification-center');
+    if (modal) modal.remove();
+}
+
+// Make functions global
+window.showNotificationCenter = showNotificationCenter;
+window.requestNotificationPermission = requestNotificationPermission;
+window.demoOrderNotification = demoOrderNotification;
+window.demoPromotionNotification = demoPromotionNotification;
+window.closeNotificationCenter = closeNotificationCenter;
+
 
     // ======================================================
     // == FUNCTIONS FOR REMOVING A COMBO
@@ -1029,3 +1151,140 @@ Bạn có muốn tiếp tục thanh toán không?
     console.log('Total menu items:', menuList.length);
     console.log('Total combos available:', staffCombos.length);
 });
+
+// --- Notification Manager Class ---  //Thêm Notification Manager của T.Anh 
+class NotificationManager {
+    constructor() {
+        this.permission = Notification.permission;
+        this.isSupported = 'Notification' in window;
+        this.registrationReady = false;
+        this.subscription = null;
+    }
+
+    // Kiểm tra hỗ trợ và yêu cầu quyền
+    async initialize() {
+        if (!this.isSupported) {
+            console.log('Push notifications không được hỗ trợ trên trình duyệt này');
+            return false;
+        }
+
+        if (this.permission === 'default') {
+            this.permission = await Notification.requestPermission();
+        }
+
+        if (this.permission !== 'granted') {
+            console.log('Người dùng từ chối quyền thông báo');
+            return false;
+        }
+
+        // Đợi service worker sẵn sàng
+        if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.ready;
+            this.registrationReady = true;
+            
+            // Kiểm tra subscription hiện tại
+            this.subscription = await registration.pushManager.getSubscription();
+            console.log('Push notification đã sẵn sàng');
+        }
+
+        return true;
+    }
+
+    // Hiển thị thông báo local
+    showNotification(title, options = {}) {
+        if (this.permission !== 'granted') return;
+
+        const defaultOptions = {
+            icon: '/icon-192x192.png', // Icon của PWA
+            badge: '/icon-72x72.png',
+            tag: 'fuji-kitchen',
+            renotify: false,
+            requireInteraction: false,
+            ...options
+        };
+
+        if (this.registrationReady && 'serviceWorker' in navigator) {
+            // Sử dụng service worker để hiển thị
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification(title, defaultOptions);
+            });
+        } else {
+            // Fallback cho trình duyệt cũ
+            new Notification(title, defaultOptions);
+        }
+    }
+
+    // Thông báo cho đơn hàng
+    notifyOrderUpdate(orderStatus, orderDetails = {}) {
+        const notifications = {
+            'confirmed': {
+                title: '🍜 Đơn hàng đã xác nhận!',
+                body: `Cảm ơn bạn! Chúng tôi đang chuẩn bị ${orderDetails.totalItems || ''} món cho bạn.`,
+                icon: '/icon-192x192.png'
+            },
+            'preparing': {
+                title: '👨‍🍳 Đang nấu nướng...',
+                body: 'Bếp trưởng đang chuẩn bị món ăn của bạn.',
+                icon: '/icon-192x192.png'
+            },
+            'ready': {
+                title: '🔔 Đơn hàng đã sẵn sàng!',
+                body: 'Món ăn của bạn đã hoàn thành. Vui lòng đến quầy để nhận.',
+                icon: '/icon-192x192.png',
+                requireInteraction: true,
+                vibrate: [200, 100, 200]
+            },
+            'delivered': {
+                title: '✨ Chúc bạn ngon miệng!',
+                body: 'Hy vọng bạn thưởng thức bữa ăn tuyệt vời tại Fuji Kitchen.',
+                icon: '/icon-192x192.png'
+            }
+        };
+
+        const notification = notifications[orderStatus];
+        if (notification) {
+            this.showNotification(notification.title, {
+                body: notification.body,
+                icon: notification.icon,
+                requireInteraction: notification.requireInteraction,
+                vibrate: notification.vibrate,
+                data: { orderStatus, ...orderDetails }
+            });
+        }
+    }
+
+    // Thông báo khuyến mãi (chỉ Staff mới có thể gửi)
+    notifyPromotion(title, message, imageUrl = null) {
+        if (userRole !== 'staff') return;
+
+        this.showNotification(`🎉 ${title}`, {
+            body: message,
+            icon: imageUrl || '/icon-192x192.png',
+            image: imageUrl,
+            requireInteraction: true,
+            actions: [
+                {
+                    action: 'view',
+                    title: 'Xem menu',
+                    icon: '/icon-72x72.png'
+                }
+            ]
+        });
+    }
+
+    // Thông báo combo mới
+    notifyNewCombo(comboName, discount) {
+        this.showNotification('🍱 Combo mới ra mắt!', {
+            body: `${comboName} - Tiết kiệm ${Math.round(discount * 100)}%`,
+            icon: '/icon-192x192.png',
+            requireInteraction: true,
+            actions: [
+                {
+                    action: 'view-combo',
+                    title: 'Xem combo',
+                    icon: '/icon-72x72.png'
+                }
+            ]
+        });
+    }
+}

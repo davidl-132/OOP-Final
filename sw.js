@@ -65,9 +65,9 @@ self.addEventListener('fetch', event => {
         })
     );
 });
-//Push Notification
-self.addEventListener('push', function(event) {
-    console.log('[Service Worker] Push Received.');
+//Push Notification của T.Anh tới hết
+self.addEventListener('push', function(event) { 
+    console.log('[Service Worker] Push Received.'); 
 
     let notificationData = {};
     
