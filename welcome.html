@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuji Kitchen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin:wght@700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="welcome.css">
+    <link rel ="icon" type="image/png" href="favicon.png">
+</head>
+<body class="flex items-center justify-center min-h-screen relative overflow-hidden bg-pink-100">
+
+    <div class="sakura-container"></div>
+
+    <div id="welcome-card" class="text-center p-8 bg-white shadow-2xl rounded-lg max-w-sm w-full relative z-10 border-4 border-red-500 transform transition-all duration-300 hover:scale-105 hover:shadow-red-500/50">
+        
+        <!-- **ĐÃ SỬA**: Thêm class `rounded-full` và `object-cover` để làm tròn logo -->
+        <!-- Thêm class `logo-pulse` để có hiệu ứng sinh động -->
+        <img src="icons/Logo.jpg" alt="Logo Fuji Kitchen" class="mx-auto h-24 w-24 mb-6 rounded-full object-cover border-4 border-red-500 logo-pulse">
+
+        <h1 class="font-display text-4xl font-bold text-gray-800 uppercase tracking-widest mb-4">FUJI KITCHEN</h1>
+        <p class="text-gray-600 mt-2 mb-8 text-lg">Choose your role to continue</p>
+
+        <div class="space-y-4">
+            <a href="login.html" class="block w-full bg-red-600 text-white font-bold py-4 px-4 rounded-lg text-lg hover:bg-red-700 transition-colors transform hover:scale-105">
+                STAFF
+            </a>
+            
+            <a href="login.html" class="block w-full bg-gray-700 text-white font-bold py-4 px-4 rounded-lg text-lg hover:bg-gray-800 transition-colors transform hover:scale-105">
+                GUEST
+            </a>
+        </div>
+
+        <p class="footer-text">© 2024 Fuji Kitchen. All Rights Reserved.</p>
+    </div>
+
+    <script src="sakura.js"></script>
+</body>
+</html>

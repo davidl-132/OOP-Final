@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực đơn - Fuji Kitchen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'black': '#000000',
+                        'white': '#ffffff',
+                        'gray-dark': '#1a1a1a',
+                        'gray-medium': '#333333',
+                        'gray-light': '#666666'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-black text-white min-h-screen">
+
+    <div class="sakura-container"></div>
+
+    <div id="app-container" class="container mx-auto max-w-7xl min-h-screen shadow-2xl">
+        <header class="p-4 flex items-center justify-between sticky top-0 z-20 bg-black border-b-2 border-white">
+            <div class="flex items-center space-x-4">
+                <img src="icons/Logo.jpg" alt="Fuji Kitchen Logo" class="h-12 w-12 rounded-full object-cover border-2 border-white">
+                <div>
+                    <h1 class="font-display text-3xl font-bold text-white">Fuji Kitchen</h1>
+                    <p class="text-sm text-gray-300">富士キッチン - Tinh hoa ẩm thực Nhật</p>
+                </div>
+            </div>
+
+            <!-- Header đang chứa 2 nút: Thông báo và Giỏ hàng -->
+            <div id="header-right-actions" class="flex items-center space-x-6">
+                <button id="notification-btn" class="relative p-2 text-white hover:text-gray-300 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <span class="absolute -top-1 -right-1 h-3 w-3 bg-white rounded-full"></span>
+                </button>
+                
+                <button id="cart-btn" class="relative bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center space-x-2 border-2 border-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Giỏ hàng</span>
+                    <span id="cart-badge" class="bg-black text-white text-xs font-bold px-2 py-1 rounded-full hidden">0</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="p-4 sm:p-6 lg:p-8">
+            
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+                <h2 class="font-display text-5xl font-bold text-white mb-4">おもてなし</h2>
+                <p class="text-xl text-gray-300 mb-6">Chào mừng đến với trải nghiệm ẩm thực Nhật Bản chân thực</p>
+                <div class="h-0.5 bg-white w-24 mx-auto mb-8"></div>
+            </section>
+
+            <!-- Special Offers -->
+            <section class="mb-12">
+                <div class="bg-gradient-to-r from-gray-dark to-black rounded-2xl p-8 text-white relative overflow-hidden border-2 border-white">
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between">
+                        <div class="text-center md:text-left mb-6 md:mb-0">
+                            <h3 class="font-display text-3xl font-bold mb-2">特別オファー</h3>
+                            <p class="text-xl mb-1">Ưu đãi đặc biệt cuối tuần</p>
+                            <p class="text-gray-300">Giảm 15% cho tất cả combo - Chỉ áp dụng thứ 7 & Chủ Nhật</p>
+                        </div>
+                        <button onclick="document.querySelector('[data-category=combo]').click()" class="bg-white text-black font-bold px-8 py-4 rounded-lg hover:bg-gray-200 transition-colors border-2 border-white">
+                            Xem combo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booking Section -->
+            <!-- <section id="booking-section" class="mb-8">
+                <button id="open-booking-modal" class="w-full bg-black text-white font-bold py-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-dark transition-colors border-2 border-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Đặt Bàn Ngay</span>
+                </button>
+            </section> -->
+
+            <!-- Category Navigation -->
+            <section class="mb-8">
+                <div class="bg-black sticky top-20 z-10 border-b-2 border-white pb-4">
+                    <nav id="category-nav" class="flex flex-wrap justify-center space-x-2 lg:space-x-6">
+                        <button class="category-btn px-3 py-3 font-semibold text-white border-b-2 border-white mb-2" data-category="all">
+                            <span class="block text-sm lg:text-base">All</span>
+                            <span class="text-xs">(すべて)</span>
+                        </button>
+                        <button class="category-btn px-3 py-3 font-semibold text-gray-light hover:text-white transition-colors mb-2" data-category="ramen">
+                            <span class="block text-sm lg:text-base">Ramen</span>
+                            <span class="text-xs">(ラーメン)</span>
+                        </button>
+                        <button class="category-btn px-3 py-3 font-semibold text-gray-light hover:text-white transition-colors mb-2" data-category="ricedon">
+                            <span class="block text-sm lg:text-base">Rice Don</span>
+                            <span class="text-xs">(丼)</span>
+                        </button>
+                        <button class="category-btn px-3 py-3 font-semibold text-gray-light hover:text-white transition-colors mb-2" data-category="drink">
+                            <span class="block text-sm lg:text-base">Drinks</span>
+                            <span class="text-xs">(飲み物)</span>
+                        </button>
+                        <button class="category-btn px-3 py-3 font-semibold text-gray-light hover:text-white transition-colors mb-2" data-category="sidedish">
+                            <span class="block text-sm lg:text-base">Side Dish</span>
+                            <span class="text-xs">(おつまみ)</span>
+                        </button>
+                        <button class="category-btn px-3 py-3 font-semibold text-gray-light hover:text-white transition-colors mb-2" data-category="topping">
+                            <span class="block text-sm lg:text-base">Topping</span>
+                            <span class="text-xs">(トッピング)</span>
+                        </button>
+                        <button class="category-btn px-3 py-3 font-semibold text-gray-light hover:text-white transition-colors mb-2" data-category="combo">
+                            <span class="block text-sm lg:text-base">Combo ✨</span>
+                            <span class="text-xs">(セット)</span>
+                        </button>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- Menu Items -->
+            <section id="menu-section">
+                <div id="menu-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Menu items will be populated by JavaScript -->
+                    <div class="col-span-full text-center py-12">
+                        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+                        <p class="text-gray-300">Đang tải menu...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden items-center justify-center">
+        <div class="bg-black border-2 border-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-display text-3xl font-bold text-white">ショッピングカート</h2>
+                <button id="close-cart" class="text-white hover:text-gray-300 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="cart-items-container" class="space-y-4 mb-6">
+                <!-- Cart items will be populated here -->
+            </div>
+            
+            <div id="cart-empty" class="text-center py-8">
+                <div class="text-6xl mb-4">🛒</div>
+                <p class="text-gray-300 text-lg mb-4">Giỏ hàng của bạn đang trống</p>
+                <p class="text-gray-400">Hãy thêm những món ngon vào giỏ hàng nhé!</p>
+                <div class="mt-6">
+                    <button onclick="document.getElementById('close-cart').click()" class="bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                        Tiếp tục chọn món
+                    </button>
+                </div>
+            </div>
+            
+            <div id="cart-summary" class="hidden border-t-2 border-white pt-6">
+                <div class="flex items-center justify-between text-2xl font-bold mb-6">
+                    <span class="text-white">Tổng cộng:</span>
+                    <span id="cart-total" class="text-white">0đ</span>
+                </div>
+                
+                <!-- Payment Options -->
+                <div class="mb-4 p-4 bg-gray-dark rounded-lg border border-gray-medium">
+                    <p class="text-sm text-gray-300 mb-3">💳 Phương thức thanh toán:</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <span class="bg-gray-700 text-white px-3 py-2 rounded-lg text-xs text-center">💰 Tiền mặt</span>
+                        <span class="bg-gray-700 text-white px-3 py-2 rounded-lg text-xs text-center">💳 Thẻ ngân hàng</span>
+                        <span class="bg-gray-700 text-white px-3 py-2 rounded-lg text-xs text-center">📱 Ví điện tử</span>
+                    </div>
+                </div>
+                
+                <!-- Estimated Time -->
+                <div class="mb-6 p-4 bg-gray-dark rounded-lg border border-gray-medium">
+                    <div class="flex items-center space-x-2 text-sm text-gray-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>⏰ Thời gian chuẩn bị: 15-20 phút</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Nhân viên sẽ gọi số bàn khi món sẵn sàng</p>
+                </div>
+                
+                <button id="payment-btn" class="w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 border-2 border-white flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>🛒 Thanh toán ngay</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Animation Overlay (Hidden by default) -->
+    <div id="success-overlay" class="fixed inset-0 bg-black bg-opacity-95 z-60 hidden items-center justify-center">
+        <div class="text-center">
+            <div class="text-8xl mb-4 animate-bounce">✅</div>
+            <h2 class="text-3xl font-bold text-white mb-2">注文完了！</h2>
+            <p class="text-xl text-gray-300">Đặt hàng thành công!</p>
+        </div>
+    </div>
+
+    <!-- Only load one JavaScript file -->
+    <script src="app.js"></script>
+</body>
+</html>

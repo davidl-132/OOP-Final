@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Account - Fuji Kitchen</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin:wght@700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Link tới file CSS riêng -->
+    <link rel="stylesheet" href="lg.css"> 
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+
+    <div class="sakura-container"></div>
+
+    <div id="welcome-card">
+        <img src="icons/Logo.jpg" alt="Logo Fuji Kitchen" class="logo logo-pulse">
+
+        <!-- Form Đăng Nhập (hiển thị mặc định) -->
+        <div id="login-view">
+            <h1 class="title">LOGIN</h1>
+            <p class="subtitle">Đăng nhập để tiếp tục</p>
+            <form id="login-form" class="form-container">
+                <div><input type="text" id="login-username" placeholder="Tên đăng nhập" class="login-input" required></div>
+                <div><input type="password" id="login-password" placeholder="Mật khẩu" class="login-input" required></div>
+                <p id="login-error-message" class="error-text"></p>
+                <button type="submit" class="btn btn-guest">Đăng Nhập</button>
+            </form>
+            <p class="toggle-text">Chưa có tài khoản? <a href="#" id="show-register">Đăng ký ngay</a></p>
+        </div>
+
+        <!-- Form Đăng Ký (ẩn mặc định) -->
+        <div id="register-view" class="hidden">
+            <h1 class="title">REGISTER</h1>
+            <p class="subtitle">Tạo tài khoản mới</p>
+            <form id="register-form" class="form-container">
+                <div><input type="text" id="register-username" placeholder="Tên đăng nhập" class="login-input" required></div>
+                <div><input type="password" id="register-password" placeholder="Mật khẩu" class="login-input" required></div>
+                <div><input type="password" id="confirm-password" placeholder="Xác nhận mật khẩu" class="login-input" required></div>
+                <p id="register-error-message" class="error-text"></p>
+                <button type="submit" class="btn btn-guest">Tạo Tài Khoản</button>
+            </form>
+            <p class="toggle-text">Đã có tài khoản? <a href="#" id="show-login">Đăng nhập</a></p>
+        </div>
+        
+        <p class="footer-text"><a href="welcome.html" class="back-link">← Quay lại</a></p>
+    </div>
+
+    <script src="sakura.js" defer></script>
+    <script src="login.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Views
+        const loginView = document.getElementById('login-view');
+        const registerView = document.getElementById('register-view');
+
+        // Toggle links
+        const showRegisterLink = document.getElementById('show-register');
+        const showLoginLink = document.getElementById('show-login');
+
+        // Forms and messages
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginErrorMessage = document.getElementById('login-error-message');
+        const registerErrorMessage = document.getElementById('register-error-message');
+
+        // =============================================================
+        // SỬ DỤNG ACCOUNT MANAGER ĐỂ XỬ LÝ LOGIC
+        // =============================================================
+
+        // Khởi tạo AccountManager, nó sẽ tự động tải dữ liệu từ localStorage
+        const accountManager = new AccountManager();
+
+        // --- Chuyển đổi giữa 2 form ---
+        showRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginView.classList.add('hidden');
+            registerView.classList.remove('hidden');
+        });
+
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerView.classList.add('hidden');
+            loginView.classList.remove('hidden');
+        });
+
+        // --- Đăng ký Guest ---
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                registerErrorMessage.textContent = 'Mật khẩu xác nhận không khớp.';
+                return;
+            }
+
+            // Gọi phương thức của AccountManager
+            const result = accountManager.registerGuest(username, password);
+
+            if (result.success) {
+                // Lưu thông tin người dùng hiện tại cho các trang khác sử dụng
+                localStorage.setItem("currentUser", JSON.stringify({
+                    username: result.user.getUsername(),
+                    role: result.user.getRole()
+                }));
+                alert('Đăng ký thành công! Đang chuyển đến menu...');
+                window.location.href = 'menu.html';
+            } else {
+                registerErrorMessage.textContent = result.message;
+            }
+        });
+
+        // --- Đăng nhập Staff + Guest ---
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            // Gọi phương thức của AccountManager
+            const loggedInUser = accountManager.login(username, password);
+
+            if (loggedInUser) {
+                // Đăng nhập thành công, lưu phiên làm việc
+                localStorage.setItem("currentUser", JSON.stringify({
+                    username: loggedInUser.getUsername(),
+                    role: loggedInUser.getRole()
+                }));
+                alert(`Đăng nhập ${loggedInUser.getRole()} thành công!`);
+                window.location.href = "menu.html";
+            } else {
+                loginErrorMessage.textContent = "Tên đăng nhập hoặc mật khẩu không đúng.";
+            }
+        });
+    });
+    </script>
+</body>
+</html>

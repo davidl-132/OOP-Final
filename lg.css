@@ -1,0 +1,151 @@
+/* --- Cài đặt chung & Fonts (Tương tự welcome.css) --- */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    background-color: #fdf2f8;
+    background-image: url('icons/welcome-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: inherit;
+    filter: blur(4px);
+    z-index: -1;
+    transform: scale(1.1);
+}
+
+#welcome-card {
+    text-align: center;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    max-width: 24rem;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    border: 4px solid #4b5563; /* Viền màu xám Guest */
+}
+
+.logo { margin: auto; height: 6rem; width: 6rem; margin-bottom: 1.5rem; border-radius: 9999px; object-fit: cover; border: 4px solid #4b5563; }
+.title { font-family: 'Kaisei Tokumin', serif; font-size: 2.25rem; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.subtitle { color: #4b5563; margin-bottom: 2rem; font-size: 1.125rem; }
+
+.form-container { display: grid; gap: 1rem; }
+.login-input { width: 100%; padding: 0.75rem 1rem; border: 2px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; box-sizing: border-box; transition: all 0.2s ease-in-out; }
+.login-input:focus { outline: none; border-color: #4b5563; box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.3); }
+
+.btn { display: block; width: 100%; color: white; font-weight: 700; padding: 1rem; border-radius: 0.5rem; font-size: 1.125rem; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s ease-in-out; }
+.btn-guest { background-color: #4b5563; }
+.btn-guest:hover { background-color: #374151; transform: scale(1.02); }
+
+.error-text { color: #dc2626; font-size: 0.875rem; min-height: 1.25rem; font-weight: 500; }
+.footer-text { margin-top: 1.5rem; }
+.back-link { font-size: 0.875rem; color: #6b7280; text-decoration: none; transition: color 0.2s; }
+.back-link:hover { color: #4b5563; }
+
+.toggle-text { margin-top: 1.5rem; font-size: 0.875rem; color: #6b7280; }
+.toggle-text a { color: #dc2626; font-weight: 500; text-decoration: none; }
+.toggle-text a:hover { text-decoration: underline; }
+
+.hidden { display: none; }
+
+/*
+* CSS cho hiệu ứng hoa anh đào (Sakura)
+*/
+.sakura-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Đảm bảo không cản click */
+    overflow: hidden; /* Giữ cánh hoa trong khung hình */
+    z-index: 0; /* Đặt phía sau nội dung */
+}
+
+.sakura-petal {
+    position: absolute;
+    background-color: #ffb6c1; /* Màu hồng cánh sen nhạt */
+    border-radius: 50%;
+    width: 15px; /* Kích thước cánh hoa */
+    height: 15px;
+    animation: fall linear infinite; /* Animation rơi */
+    box-shadow: 0 0 5px rgba(255, 182, 193, 0.7); /* Hiệu ứng tỏa sáng nhẹ */
+}
+
+/* Thêm nhiều hình dạng cánh hoa hơn để trông tự nhiên */
+.sakura-petal::before,
+.sakura-petal::after {
+    content: '';
+    position: absolute;
+    background-color: inherit;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+.sakura-petal::before {
+    top: -50%;
+    left: 0;
+    transform: rotate(30deg);
+}
+
+.sakura-petal::after {
+    top: 0;
+    left: 50%;
+    transform: rotate(-30deg);
+}
+
+
+/* Keyframe cho animation rơi */
+@keyframes fall {
+    0% {
+        transform: translate(0, -10vh) rotateZ(0deg) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(calc(100vw * var(--random-x, 0.5)), 110vh) rotateZ(360deg) scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* Đặt biến CSS tùy chỉnh cho mỗi cánh hoa để tạo sự ngẫu nhiên trong chuyển động */
+.sakura-petal {
+    --random-x: calc(var(--x) * 1vw); /* X-axis movement */
+    animation: fall linear infinite;
+    /* Các thuộc tính ngẫu nhiên khác sẽ được JS thêm vào */
+}
+
+/* **ĐÃ THÊM**: CSS cho hiệu ứng logo "nhịp đập" */
+.logo-pulse {
+    animation: pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px 20px rgba(239, 68, 68, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
