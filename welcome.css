@@ -2,7 +2,7 @@ body {
     font-family: 'Noto Sans JP', sans-serif;
     margin: 0;
     min-height: 100vh;
-    background-color: #fdf2f8; /* Màu nền dự phòng */
+    background-color: #fdf2f8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -10,7 +10,7 @@ body {
     overflow: hidden;
 }
 
-/* **THAY ĐỔI**: Tạo một lớp giả để làm background mờ */
+/*Create a pseudo layer to blur the bg*/
 body::before {
     content: '';
     position: absolute;
@@ -26,8 +26,7 @@ body::before {
     filter: blur(2px);
     transform: scale(1.1);
 
-    z-index: -1; /* Đặt phía sau nội dung chính */
-    
+    z-index: -1;
 }
 
 /* Font chữ nghệ thuật cho tiêu đề */
@@ -36,7 +35,7 @@ body::before {
 }
 
 /*
-* CSS cho hiệu ứng hoa anh đào (Sakura)
+* CSS for Sakura falling animation
 */
 .sakura-container {
     position: absolute;
@@ -44,22 +43,22 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Đảm bảo không cản click */
-    overflow: hidden; /* Giữ cánh hoa trong khung hình */
-    z-index: 0; /* Đặt phía sau nội dung */
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
 }
 
 .sakura-petal {
     position: absolute;
-    background-color: #ffb6c1; /* Màu hồng cánh sen nhạt */
+    background-color: #ffb6c1;
     border-radius: 50%;
-    width: 15px; /* Kích thước cánh hoa */
+    width: 15px;
     height: 15px;
-    animation: fall linear infinite; /* Animation rơi */
-    box-shadow: 0 0 5px rgba(255, 182, 193, 0.7); /* Hiệu ứng tỏa sáng nhẹ */
+    animation: fall linear infinite;
+    box-shadow: 0 0 5px rgba(255, 182, 193, 0.7); 
 }
 
-/* Thêm nhiều hình dạng cánh hoa hơn để trông tự nhiên */
+/* Add variety of sakura's shapes to make it more natural */
 .sakura-petal::before,
 .sakura-petal::after {
     content: '';
@@ -83,7 +82,7 @@ body::before {
 }
 
 
-/* Keyframe cho animation rơi */
+/* Keyframe for falling animation */
 @keyframes fall {
     0% {
         transform: translate(0, -10vh) rotateZ(0deg) scale(1);
@@ -98,14 +97,13 @@ body::before {
     }
 }
 
-/* Đặt biến CSS tùy chỉnh cho mỗi cánh hoa để tạo sự ngẫu nhiên trong chuyển động */
+/* Set custom CSS for create randomness in movement */
 .sakura-petal {
-    --random-x: calc(var(--x) * 1vw); /* X-axis movement */
+    --random-x: calc(var(--x) * 1vw);
     animation: fall linear infinite;
-    /* Các thuộc tính ngẫu nhiên khác sẽ được JS thêm vào */
 }
 
-/* **ĐÃ THÊM**: CSS cho hiệu ứng logo "nhịp đập" */
+/* Logo purse effect */
 .logo-pulse {
     animation: pulse 3s infinite ease-in-out;
 }

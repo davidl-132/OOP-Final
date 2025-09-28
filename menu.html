@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Tokumin:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="icons/favicon.png">
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -37,7 +37,7 @@
                 <img src="icons/Logo.jpg" alt="Fuji Kitchen Logo" class="h-12 w-12 rounded-full object-cover border-2 border-white">
                 <div>
                     <h1 class="font-display text-3xl font-bold text-white">Fuji Kitchen</h1>
-                    <p class="text-sm text-gray-300">富士キッチン - Tinh hoa ẩm thực Nhật</p>
+                    <p class="text-sm text-gray-300">フジキッチン - ♥ Ăn là thích, thích là phải ăn ♥</p>
                 </div>
             </div>
 
@@ -49,8 +49,13 @@
                     </svg>
                     <span class="absolute -top-1 -right-1 h-3 w-3 bg-white rounded-full"></span>
                 </button>
+
+                <button id="history-btn" onclick="showGuestOrderHistory()" class="relative p-2 text-white hover:text-gray-300 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                </button>
                 
-                <button id="cart-btn" class="relative bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center space-x-2 border-2 border-white">
+                <button id="cart-btn" class="relative bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center space-x-2 border-2 border-white breathing-effect">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
@@ -76,7 +81,7 @@
                         <div class="text-center md:text-left mb-6 md:mb-0">
                             <h3 class="font-display text-3xl font-bold mb-2">特別オファー</h3>
                             <p class="text-xl mb-1">Ưu đãi đặc biệt cuối tuần</p>
-                            <p class="text-gray-300">Giảm 15% cho tất cả combo - Chỉ áp dụng thứ 7 & Chủ Nhật</p>
+                            <p class="text-gray-300">Giảm giá cho tất cả các combo - Chỉ áp dụng thứ 7 & Chủ Nhật</p>
                         </div>
                         <button onclick="document.querySelector('[data-category=combo]').click()" class="bg-white text-black font-bold px-8 py-4 rounded-lg hover:bg-gray-200 transition-colors border-2 border-white">
                             Xem combo
@@ -146,7 +151,7 @@
 
     <!-- Cart Modal -->
     <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden items-center justify-center">
-        <div class="bg-black border-2 border-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="bg-black border-2 border-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-content-slide-in">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="font-display text-3xl font-bold text-white">ショッピングカート</h2>
                 <button id="close-cart" class="text-white hover:text-gray-300 transition-colors">
@@ -219,5 +224,6 @@
 
     <!-- Only load one JavaScript file -->
     <script src="app.js"></script>
+    <script src="sakura.js"></script>>
 </body>
 </html>

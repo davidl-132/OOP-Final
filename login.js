@@ -70,7 +70,6 @@ class AccountManager{
      */
     _saveGuestsToStorage() {
         const guestDataArray = [];
-        // Chuyển đổi Map sang một mảng các đối tượng đơn giản để lưu trữ
         for (let guest of this._guests.values()) {
             guestDataArray.push({
                 username: guest.getUsername(),
@@ -122,6 +121,4 @@ class AccountManager{
         
         return null; // Đăng nhập thất bại
     }
-
-
 }

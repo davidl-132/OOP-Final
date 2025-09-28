@@ -1,25 +1,27 @@
-const CACHE_NAME = 'fuji-kitchen-cache-v2'; // **Tăng phiên bản** để cập nhật
+const CACHE_NAME = 'fuji-kitchen-cache-v2';
 const APP_PREFIX = '/FinalOOPPJ/';
 
 // **ĐÃ SỬA**: Danh sách file khớp với thư mục của bạn
 const URLS_TO_CACHE = [
     APP_PREFIX,
     APP_PREFIX + 'welcome.html',
-    APP_PREFIX + 'welcome.css',
+    APP_PREFIX + 'login.html',
     APP_PREFIX + 'menu.html',
-    APP_PREFIX + 'style.css', // Giữ lại nếu index.html đang dùng
-    APP_PREFIX + 'app.js',
-    APP_PREFIX + 'login-guest.html',
     APP_PREFIX + 'lg.css',
-    APP_PREFIX + 'login-staff.html',
-    APP_PREFIX + 'ls.css',
+    APP_PREFIX + 'style.css',
+    APP_PREFIX + 'welcome.css',
+    APP_PREFIX + 'app.js',
+    APP_PREFIX + 'login.js',
+    APP_PREFIX + 'sakura.js',
     APP_PREFIX + 'manifest.json',
-    APP_PREFIX + 'favicon.png',
+    APP_PREFIX + 'icons/favicon.png',
     APP_PREFIX + 'icons/Logo.jpg',
-    APP_PREFIX + 'icons/welcome-bg.jpg'
+    APP_PREFIX + 'icons/welcome-bg.jpg',
+    APP_PREFIX + 'icons/icon-192.png',
+    APP_PREFIX + 'icons/icon-512.png'
 ];
 
-// Install: Cache các file cần thiết
+// Install: Cache nessessary files
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
@@ -32,7 +34,7 @@ self.addEventListener('install', event => {
     self.skipWaiting();
 });
 
-// Activate: Xóa các cache cũ
+// Activate: Delete old caches
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys().then(cacheNames => {
@@ -47,7 +49,7 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch: Chiến lược Cache First
+// Fetch: Cache First
 self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
     event.respondWith(
@@ -65,7 +67,8 @@ self.addEventListener('fetch', event => {
         })
     );
 });
-//Push Notification của T.Anh tới hết
+
+//Push Notification Event
 self.addEventListener('push', function(event) { 
     console.log('[Service Worker] Push Received.'); 
 

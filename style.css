@@ -197,3 +197,51 @@ body {
     background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
     border: 1px solid #333333;
 }
+
+/* Hiệu ứng "breathing" cho các nút của Staff */
+@keyframes breathing {
+  0% { transform: scale(1); box-shadow: 0 0 3px rgba(255, 255, 255, 0.2); }
+  50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); }
+  100% { transform: scale(1); box-shadow: 0 0 3px rgba(255, 255, 255, 0.2); }
+}
+
+.breathing-effect {
+  animation: breathing 3s ease-in-out infinite;
+}
+
+/* Animation cho modal trượt vào */
+@keyframes slideInDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content-slide-in {
+  animation: slideInDown 0.4s ease-out forwards;
+}
+
+/* 1. Định nghĩa keyframes cho hiệu ứng trượt lên và hiện ra */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Bắt đầu từ vị trí thấp hơn 20px */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Trở về vị trí ban đầu */
+  }
+}
+
+/* 2. Tạo một class để áp dụng animation */
+.nav-item-animate {
+  /* Mặc định sẽ bị ẩn đi */
+  opacity: 0; 
+  
+  /* Áp dụng animation đã định nghĩa */
+  animation: fadeInUp 0.5s ease-out forwards;
+}
